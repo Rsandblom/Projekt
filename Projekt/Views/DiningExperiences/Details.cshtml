@@ -1,0 +1,136 @@
+﻿<!--model Projekt.Models.DiningExperience-->
+@model Projekt.ViewModels.DiningExpDetailsVM
+
+@{
+    ViewData["Title"] = "Details";
+}
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lora" />
+<h2>Details</h2>
+
+<div class="row">
+    <div class="column1">
+        <div>
+            <h4>DiningExperience</h4>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt class="thegreyonestitles">
+                    @Html.DisplayNameFor(model => model.DinExp.Restaurant)
+                </dt>
+                <dd class="thegreyones">
+                    @Html.DisplayFor(model => model.DinExp.Restaurant)
+                </dd>
+                <dt class="thenotgreyonestitles">
+                    @Html.DisplayNameFor(model => model.DinExp.Dish)
+                </dt>
+                <dd class="thenotgreyones">
+                    @Html.DisplayFor(model => model.DinExp.Dish)
+                </dd>
+                <dt class="thegreyonestitles">
+                    @Html.DisplayNameFor(model => model.DinExp.Description)
+                </dt>
+                <dd class="thegreyones">
+                    @Html.DisplayFor(model => model.DinExp.Description)
+                </dd>
+                <dt class="thenotgreyonestitles">
+                    @Html.DisplayNameFor(model => model.DinExp.Latitude)
+                </dt>
+                <dd class="thenotgreyones">
+                    @Html.DisplayFor(model => model.DinExp.Longitude)
+                </dd>
+                <dt class="thegreyonestitles">
+                    @Html.DisplayNameFor(model => model.DinExp.Latitude)
+                </dt>
+                <dd class="thegreyones">
+                    @Html.DisplayFor(model => model.DinExp.Latitude)
+                </dd>
+                @{int even = 0; }
+                @foreach (var item in Model.DinExp.SearchTagsList)
+                {
+                    if (even % 2 != 0)
+                    {
+            <dt class="thegreyonestitles">
+                @Html.DisplayNameFor(modelItem => item.Tag)
+            </dt>
+            <dd class="thegreyones">
+                @Html.DisplayFor(modelItem => item.Tag)
+            </dd>
+
+}
+else
+{
+            <dt class="thenotgreyonestitles">
+                @Html.DisplayNameFor(modelItem => item.Tag)
+            </dt>
+            <dd class="thenotgreyones">
+                @Html.DisplayFor(modelItem => item.Tag)
+            </dd>
+}
+
+even++;
+}
+            </dl>
+        </div>
+        <div>
+            <label id="weather"></label>
+        </div>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.DinExp.Id">Edit</a> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+
+    </div>
+    <div class="column2">
+        <h4>Google Maps</h4>
+        <div id="map"></div>
+    </div>
+    <div class="gallery">
+        <h4>Flickr Gallery</h4>
+        @foreach (var image in Model.Photos)
+        {
+            <a href="@image.Medium640Url" style="margin:2px;float:left;">
+                <img src="@image.SquareThumbnailUrl" title="@image.Title"  />
+            </a>
+        }
+    </div>
+</div>
+
+
+
+<script>
+      function initMap() {
+        var uluru = {lat: @Model.DinExp.Latitude, lng: @Model.DinExp.Longitude};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 15,
+          center: uluru
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+      }
+</script>
+-->
+<script async defer
+    src = @ViewData["GmapsAPIandKey"]>
+</script>
+
+@section Scripts {
+<script type="text/javascript">
+    $(document).ready(function () { 
+        $.ajax({
+            url: 'http://api.openweathermap.org/data/2.5/weather',
+            data: {
+                lat: @Model.DinExp.Latitude,
+                lon: @Model.DinExp.Longitude,
+                units: 'metric',
+                APPID: '1765fd3ea869a76f3172b025a926e9b4'
+            },
+            success: function (data) {
+                $('#weather').html("Temperature at location: " + data["main"]["temp"]);
+            }
+        })
+       
+    });
+
+</script>
+}
